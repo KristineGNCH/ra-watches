@@ -1,31 +1,23 @@
-import React from "react";
-import Clock from "./components/Clock";
-import WatchForm from "./components/WatchForm";
+import { useState } from "react";
 import "./App.css";
+import WatchForm from "./components/WatchForm";
+import Watches from "./components/Watches";
 
 function App() {
+  const [listWatches, setListWatches] = useState([]);
 
-  const [clocks, setClocks] = React.useState([]);
-
-  const addClock = (clock) => {
-    setClocks([...clocks, clock]);
+  const addWatch = (newWatch) => {
+    setListWatches((prev) => [...prev, newWatch]);
   };
 
-  const removeClock = (name) => {
-    setClocks(clocks.filter(clock => clock.name !== name));
+  const onDelete = (id) => {
+    setListWatches((prev) => prev.filter((item) => item.id !== id));
   };
 
   return (
     <>
-      <div className="app">
-      <h1 className="title">Мировые часы</h1>
-      <WatchForm onAdd={addClock} existingCities={clocks.map(clock => clock.name)} />
-      <div className="clocks__wrapper">
-        {clocks.map((clock) => (
-          <Clock key={clock.name} clock={clock} onDelete={removeClock} />
-        ))}
-      </div>
-    </div>
+      <WatchForm addWatch={addWatch} />
+      <Watches listWatches={listWatches} onDelete={onDelete} />
     </>
   );
 }

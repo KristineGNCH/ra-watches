@@ -1,48 +1,48 @@
-
 import { useState } from "react";
-import "./Watches.css";
+import PropTypes from "prop-types";
 
-const TimeZone = {
-  New_York: "America/New York",
-  Moscow: "Europe/Moscow",
-  London: "Europe/London",
-  Tokyo: "Asia/Tokyo"
-};
+function WatchForm({ addWatch }) {
+  const [nameWatch, setNameWatch] = useState("");
+  const [timeZone, setTimeZone] = useState("");
 
-function WatchForm({ onAdd, cityList }) {
-  const [selectedCity, setSelectedCity] = useState("");
-
-  const handleSubmit = (e) => {
+  const onSubmit = (e) => {
     e.preventDefault();
-
-    if (selectedCity && !cityList.includes(selectedCity)) {
-
-      const timezone = TimeZone[selectedCity];
-
-      onAdd({ name: selectedCity, timezone });
-      setSelectedCity("");
-    }
+    addWatch({ nameWatch, timeZone, id: Date.now() });
+    setNameWatch("");
+    setTimeZone("");
   };
 
   return (
-    <form className="watch__form" onSubmit={handleSubmit}>
-      <select
-        value={selectedCity}
-        onChange={(e) => setSelectedCity(e.target.value)}
-        required
-      >
-        <option value="Выберите город"></option>
-        {Object.keys(TimeZone)
-          .filter((city) => !cityList.includes(city))
-          .map((city) => (
-            <option key={city} value={city}>
-              {city}
-            </option>
-          ))}
-      </select>
-      <button className="add__watch button" type="submit" value="submit">Добавить часы</button>
+    <form className="form" onSubmit={onSubmit}>
+      <div className="city__wrapper">
+        <p className="city__title">Название</p>
+        <input
+          className="form__input "
+          type="text"
+          id="watchName"
+          value={nameWatch}
+          onChange={(e) => setNameWatch([e.target.value])}
+          required
+        />
+      </div>
+      <div className="timezone">
+        <p className="timezone__title">Временная зона</p>
+        <input
+          className="form__input "
+          type="number"
+          id="timeZone"
+          value={timeZone}
+          onChange={(e) => setTimeZone([e.target.value])}
+          required
+        />
+      </div>
+      <button className="add__button button">Добавить</button>
     </form>
   );
-}   
+}
+
+WatchForm.propTypes = {
+  addWatch: PropTypes.func.isRequired,
+};
 
 export default WatchForm;
